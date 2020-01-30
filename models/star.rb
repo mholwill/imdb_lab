@@ -27,4 +27,47 @@ class Star
   end
 
 
+  def update()
+    sql = "UPDATE stars
+    SET (
+      first_name,
+      last_name
+    ) =
+    (
+      $1, $2
+    )
+    WHERE id = $3"
+    values = [@first_name, @last_name, @id]
+    SqlRunner.run(sql, values)
+  end
+
+  def movies()
+    sql = "SELECT movies.* FROM movies
+    INNER JOIN castings
+    ON castings.movie_id = movies.id
+    WHERE star_id = $1"
+    values = [@id]
+    movie_data = SqlRunner.run(sql, values)
+    return Star.map_items(movie_data)
+  end
+
+
+
+  def self.map_items(star_data)
+    result = star_data.map { |star| Star.new(star) }
+    return result
+  end
+
+  def self.all()
+    sql = "SELECT * FROM stars"
+    stars = SqlRunner.run(sql)
+    return Star.map_items(stars)
+  end
+
+  def self.delete_all()
+    sql = "DELETE FROM stars"
+    SqlRunner.run(sql)
+  end
+
+
 end
