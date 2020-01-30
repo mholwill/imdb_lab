@@ -69,5 +69,4 @@ class Star
     SqlRunner.run(sql)
   end
 
-
 end
